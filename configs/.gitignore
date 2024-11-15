@@ -1,0 +1,32 @@
+# Bỏ qua môi trường ảo Python
+.venv/
+venv/
+
+# Bỏ qua các file Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Bỏ qua các file tạm và log
+*.log
+*.tmp
+
+# Bỏ qua các file dữ liệu tạm
+*.csv
+*.tsv
+*.data
+*.dat
+
+# Bỏ qua các file notebook checkpoints
+.ipynb_checkpoints/
+
+# Bỏ qua các file cấu hình VSCode cá nhân
+.vscode/
+
+# Bỏ qua file output của hệ điều hành macOS
+.DS_Store
+
+# Bỏ qua các thư mục configs hoặc file dữ liệu không cần track (nếu có)
+configs/
+data/
