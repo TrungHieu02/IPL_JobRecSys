@@ -13,7 +13,7 @@ from datetime import datetime
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--lambda_f', type=float, help='the value of lambda_f', default=0)
-parser.add_argument('--data', type=str, choices=['yelp', 'amazon', 'gowalla', 'ml1m'], help='name of dataset', default='ml1m_pro')
+parser.add_argument('--data', type=str, choices=['yelp', 'amazon', 'gowalla', 'ml1m', 'career'], help='name of dataset', default='ml1m_pro')
 parser.add_argument('--model', type=str, choices=['mf', 'lightgcn'], help='name of model')
 parser.add_argument('--save_flag', type=str, help='save flag')
 parser.add_argument('--lr', type=float, help='learning rate')

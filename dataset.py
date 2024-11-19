@@ -94,6 +94,7 @@ class BasicDataset(Dataset):
         return user_map, item_map
     
     def generate_data(self):
+            
         self.train_data = [[] for _ in range(self.n_users)]
         self.val_data = [[] for _ in range(self.n_users)]
         self.test_data = [[] for _ in range(self.n_users)]
@@ -188,6 +189,7 @@ class ProcessedDataset(BasicDataset):
         self.train_array = []
         self.val_array = []
         self.test_array = []
+
         for user in range(self.n_users):
             self.train_array.extend([[user, item] for item in self.train_data[user]])
             self.val_array.extend([[user, item] for item in self.val_data[user]])
@@ -422,6 +424,60 @@ class ML10MDataset(BasicDataset):
                     self.item_inter_lists[item_map[i]].append([user_map[u], t])
         self.generate_data()
 
+class CareerDataset(BasicDataset):
+    def __init__(self, dataset_config):
+        super(CareerDataset, self).__init__(dataset_config)
+
+        # Đường dẫn tới file dữ liệu
+        input_file_path = os.path.join(dataset_config['path'], 'apps_processed.tsv')
+
+        # Tập hợp tương tác user-job
+        user_inter_sets, job_inter_sets = dict(), dict()
+
+        # Đọc file .tsv
+        try:
+            with open(input_file_path, 'r') as f:
+                lines = f.read().strip().split('\n')
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File {input_file_path} không tồn tại. Hãy kiểm tra lại đường dẫn hoặc dữ liệu!")
+
+        # Xử lý từng dòng dữ liệu
+        for line in lines:
+            try:
+                user_id, job_id = line.split('\t')  # Tách dữ liệu theo tab
+                user_id, job_id = int(user_id), int(job_id)
+                update_ui_sets(user_id, job_id, user_inter_sets, job_inter_sets)
+            except ValueError:
+                print(f"Lỗi định dạng dòng: {line}. Dòng này sẽ bị bỏ qua.")
+
+        # Lọc người dùng và công việc dựa trên ngưỡng `min_inter`
+        user_map, job_map = self.remove_sparse_ui(user_inter_sets, job_inter_sets)
+
+        # Kiểm tra số lượng user và job sau khi lọc
+        print(f"Số lượng user sau khi lọc: {len(user_map)}")
+        print(f"Số lượng job sau khi lọc: {len(job_map)}")
+
+        # Danh sách tương tác của người dùng và công việc
+        self.user_inter_lists = [[] for _ in range(len(user_map))]
+        self.job_inter_lists = [[] for _ in range(len(job_map))]
+
+        # Cập nhật danh sách tương tác
+        for line in lines:
+            try:
+                user_id, job_id = line.split('\t')
+                user_id, job_id = int(user_id), int(job_id)
+                if user_id in user_map and job_id in job_map:
+                    update_user_inter_lists(user_id, job_id, 0, user_map, job_map, self.user_inter_lists)
+                    update_user_inter_lists(job_id, user_id, 0, job_map, user_map, self.job_inter_lists)
+            except ValueError:
+                print(f"Lỗi định dạng dòng khi cập nhật danh sách: {line}. Dòng này sẽ bị bỏ qua.")
+
+        # Kiểm tra danh sách tương tác
+        print(f"Ví dụ danh sách tương tác người dùng: {self.user_inter_lists[:5]}")
+        print(f"Ví dụ danh sách tương tác công việc: {self.job_inter_lists[:5]}")
+
+        # Tạo dữ liệu train/val/test
+        self.generate_data()
 
 class DatasetWithLoader():
     def __init__(self, dataset: BasicDataset, batch_size, dataloader_num_workers):

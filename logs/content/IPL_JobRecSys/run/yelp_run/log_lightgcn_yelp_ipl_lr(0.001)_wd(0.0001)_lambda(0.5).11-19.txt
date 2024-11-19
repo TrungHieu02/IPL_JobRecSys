@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/content/IPL_JobRecSys/run.py", line 92, in <module>
+    main()
+  File "/content/IPL_JobRecSys/run.py", line 53, in main
+    trainer_config = get_trainer_config(args)
+  File "/content/IPL_JobRecSys/configs/trainer_config.py", line 31, in get_trainer_config
+    return configs[args.trainer](args)
+KeyError: 'ipl'

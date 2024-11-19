@@ -18,7 +18,7 @@ def set_seed(seed=0):
 
 def init_run(log_path, log_name, seed):
     set_seed(seed)
-    if not os.path.exists(log_path): os.mkdir(log_path)
+    if not os.path.exists(log_path): os.makedirs(log_path)
     f = open(os.path.join(log_path, f'log_{log_name}.txt'), 'w')
     f = Unbuffered(f)
     sys.stderr = f
