@@ -99,9 +99,24 @@ class BasicDataset(Dataset):
         self.val_data = [[] for _ in range(self.n_users)]
         self.test_data = [[] for _ in range(self.n_users)]
 
+        # Tạo danh sách rỗng cho train, val, test
+        self.train_array = []
+        self.val_array = []
+        self.test_array = []
+
+        for user, items in enumerate(self.train_data):
+            for item in items:
+                self.train_array.append([user, item])
+
+        # Chuyển đổi sang numpy array
+        self.train_array = np.array(self.train_array, dtype=np.int32)
+        self.val_array = np.array(self.val_array, dtype=np.int32)
+        self.test_array = np.array(self.test_array, dtype=np.int32)
+
         self.train_data_item = [[] for _ in range(self.n_items)]
         self.val_data_item = [[] for _ in range(self.n_items)]
         self.test_data_item = [[] for _ in range(self.n_items)]
+        
         train_u, val_u, test_u = set(), set(), set()
         self.train_array = []
         average_inters = []
@@ -185,10 +200,6 @@ class ProcessedDataset(BasicDataset):
         assert len(self.train_data) == len(self.val_data)
         assert len(self.train_data) == len(self.test_data)
         self.n_users = len(self.train_data)
-
-        self.train_array = []
-        self.val_array = []
-        self.test_array = []
 
         for user in range(self.n_users):
             self.train_array.extend([[user, item] for item in self.train_data[user]])
