@@ -1,9 +1,0 @@
-CUDA is not available. Using CPU instead.
-Traceback (most recent call last):
-  File "/Users/lucas/IPL/run.py", line 105, in <module>
-    main()
-  File "/Users/lucas/IPL/run.py", line 66, in main
-    trainer_config = get_trainer_config(args)
-  File "/Users/lucas/IPL/configs/trainer_config.py", line 31, in get_trainer_config
-    return configs[args.trainer](args)
-KeyError: 'ipl'
